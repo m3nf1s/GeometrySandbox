@@ -10,8 +10,8 @@ DEFINE_LOG_CATEGORY_STATIC(LogBaseGeometry, All, All)
 ABaseGeometryActor::ABaseGeometryActor()
     : BaseMesh(CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh"))
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
 
     //BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
     SetRootComponent(BaseMesh);
@@ -20,7 +20,7 @@ ABaseGeometryActor::ABaseGeometryActor()
 // Called when the game starts or when spawned
 void ABaseGeometryActor::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     InitialLocation = GetActorLocation();
 
@@ -32,10 +32,10 @@ void ABaseGeometryActor::BeginPlay()
 // Called every frame
 void ABaseGeometryActor::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
     FVector CurrentLocation = GetActorLocation();
-    float time = GetWorld()->GetTimeSeconds();
+    float   time            = GetWorld()->GetTimeSeconds();
     CurrentLocation.X = InitialLocation.X + Amplitude * FMath::Sin(Frequency * time);
     CurrentLocation.Z = InitialLocation.Z + Amplitude * FMath::Cos(Frequency * time);
     SetActorLocation(CurrentLocation);
@@ -44,9 +44,9 @@ void ABaseGeometryActor::Tick(float DeltaTime)
 void ABaseGeometryActor::PrintTypes()
 {
     UE_LOG(LogBaseGeometry, Warning, TEXT("Actor name %s"), *GetName());
-	UE_LOG(LogBaseGeometry, Warning, TEXT("Weapons num: %d, kills num: %d"), WeaponNum, KillsNum);
-	UE_LOG(LogBaseGeometry, Warning, TEXT("Health: %f"), Health);
-	UE_LOG(LogBaseGeometry, Warning, TEXT("IsDead: %d, HasWeapon: %d"), IsDead, static_cast<int32>(HasWeapon));
+    UE_LOG(LogBaseGeometry, Warning, TEXT("Weapons num: %d, kills num: %d"), WeaponNum, KillsNum);
+    UE_LOG(LogBaseGeometry, Warning, TEXT("Health: %f"), Health);
+    UE_LOG(LogBaseGeometry, Warning, TEXT("IsDead: %d, HasWeapon: %d"), IsDead, static_cast<int32>(HasWeapon));
 }
 
 void ABaseGeometryActor::PrintStringTypes()
