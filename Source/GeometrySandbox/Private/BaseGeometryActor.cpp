@@ -22,19 +22,18 @@ void ABaseGeometryActor::BeginPlay()
 void ABaseGeometryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ABaseGeometryActor::PrintTypes()
 {
-	int32 WeaponNum	= 4;
-	int32 KillsNum	= 7;
-	float Health	= 67.589123f;
-	bool isDead		= false;
-	bool HasWeapon	= true;
+	int32 WeaponNum = 4;	
+	int32 KillsNum  = 7;
+	float Health    = 67.589123f;
+	bool  isDead    = false;
+	bool  HasWeapon = true;
 
 	UE_LOG(LogTemp, Display, TEXT("Weapons num: %d, kills num: %d"), WeaponNum, KillsNum);
 	UE_LOG(LogTemp, Warning, TEXT("Health: %f"), Health);
 	UE_LOG(LogTemp, Display, TEXT("Health: %.3f"), Health);
-	UE_LOG(LogTemp, Error, TEXT("IsDead: %d, HasWeapon: %d"), isDead, HasWeapon);
+	UE_LOG(LogTemp, Error,   TEXT("IsDead: %d, HasWeapon: %d"), isDead, HasWeapon);
 }
