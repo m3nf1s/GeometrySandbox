@@ -26,4 +26,20 @@ public:
 private:
 	void PrintTypes();
     void PrintStringTypes();
+
+protected:
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    int32 WeaponNum = 4;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Stat")
+    int32 KillsNum  = 7;
+    
+    UPROPERTY(EditInstanceOnly, Category = "Health")
+    float Health    = 67.589123f;
+    
+    UPROPERTY(EditAnywhere, Category = "Health")
+    bool  IsDead    = false;
+    
+    UPROPERTY(VisibleAnywhere, Category = "Weapon")
+    bool  HasWeapon = true;
 };
