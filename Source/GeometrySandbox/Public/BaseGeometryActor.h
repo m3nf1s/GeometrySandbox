@@ -33,6 +33,9 @@ struct FGeometryData
 
     UPROPERTY(EditAnywhere, Category = "Design")
     FLinearColor Color = FLinearColor::Black;
+
+    UPROPERTY(EditAnywhere, Category = "Design")
+    float TimerRate = 1.5f;
 };
 
 UCLASS()
@@ -64,7 +67,8 @@ private:
     void MoveSin();
     void MoveCos();
     void MoveCircle();
-    void HandleMovement();    
+    void HandleMovement();
+    void OnTimerFired();
 
 protected:
     UPROPERTY(EditAnywhere, Category = "Weapon")
@@ -86,5 +90,9 @@ protected:
     FGeometryData GeometryData;
 
 private:
-    FVector InitialLocation;
+    FVector      InitialLocation;
+    FTimerHandle TimerHandle;
+    
+    const int32  MaxTimerCount = 5;
+    int32        TimerCount = 0;
 };
