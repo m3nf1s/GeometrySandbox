@@ -8,6 +8,30 @@
 
 #include "BaseGeometryActor.generated.h"
 
+UENUM(Blueprintable)
+enum class EMovementType : uint8
+{
+    Static,
+    Sin,
+    Cos,
+    Circle
+};
+
+USTRUCT(BlueprintType)
+struct FGeometryData
+{
+    GENERATED_USTRUCT_BODY()
+    
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float Amplitude = 50.0f;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float Frequency = 2.0f;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    EMovementType MoveType = EMovementType::Static;
+};
+
 UCLASS()
 class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor
 {
@@ -29,13 +53,21 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    void PrintTypes();
-    void PrintStringTypes();
-    void PrintTransform();
+    void PrintTypes() const;
+    void PrintStringTypes() const;
+    void PrintTransform() const;
+    
+    void MoveSin();
+    void MoveCos();
+    void MoveCircle();
+    void HandleMovement();
 
 protected:
     UPROPERTY(EditAnywhere, Category = "Weapon")
     int32 WeaponNum = 4;
+
+    UPROPERTY(VisibleAnywhere, Category = "Weapon")
+    bool  HasWeapon = true;
 
     UPROPERTY(EditDefaultsOnly, Category = "Stat")
     int32 KillsNum  = 7;
@@ -46,14 +78,8 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Health")
     bool  IsDead    = false;
 
-    UPROPERTY(VisibleAnywhere, Category = "Weapon")
-    bool  HasWeapon = true;
-
-    UPROPERTY(EditAnywhere, Category = "Movement")
-    float Amplitude = 50.0f;
-
-    UPROPERTY(EditAnywhere, Category = "Movement")
-    float Frequency = 2.0f;
+    UPROPERTY(EditAnywhere, Category = "Geometry Data")
+    FGeometryData GeometryData;
 
 private:
     FVector InitialLocation;
