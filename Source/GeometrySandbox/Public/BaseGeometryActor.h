@@ -30,6 +30,9 @@ struct FGeometryData
 
     UPROPERTY(EditAnywhere, Category = "Movement")
     EMovementType MoveType = EMovementType::Static;
+
+    UPROPERTY(EditAnywhere, Category = "Design")
+    FLinearColor Color = FLinearColor::Black;
 };
 
 UCLASS()
@@ -56,11 +59,12 @@ private:
     void PrintTypes() const;
     void PrintStringTypes() const;
     void PrintTransform() const;
+    void SetColor(const FLinearColor& Color) const;
     
     void MoveSin();
     void MoveCos();
     void MoveCircle();
-    void HandleMovement();
+    void HandleMovement();    
 
 protected:
     UPROPERTY(EditAnywhere, Category = "Weapon")
