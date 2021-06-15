@@ -63,8 +63,11 @@ void ABaseGeometryActor::PrintStringTypes() const
     FString Stat = FString::Printf(TEXT(" \n== All stats ==\n%s\n%s\n%s"), *WeaponsNumStr, *HealthStr, *IsDeadStr);
     UE_LOG(LogBaseGeometry, Error, TEXT("%s"), *Stat);
 
-    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, Name);
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Stat, true, FVector2D(1.5f, 1.5f));
+    if(GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, Name);
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Stat, true, FVector2D(1.5f, 1.5f));
+    }
 }
 
 void ABaseGeometryActor::PrintTransform() const
@@ -86,29 +89,38 @@ void ABaseGeometryActor::PrintTransform() const
 void ABaseGeometryActor::MoveSin()
 {
     FVector CurrentLocation = GetActorLocation();
-    float   Time            = GetWorld()->GetTimeSeconds();
     
-    CurrentLocation.Y = InitialLocation.Y + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
-    SetActorLocation(CurrentLocation);
+    if(GetWorld())
+    {
+        const float Time = GetWorld()->GetTimeSeconds();
+        CurrentLocation.Y = InitialLocation.Y + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
+        SetActorLocation(CurrentLocation);
+    }
 }
 
 void ABaseGeometryActor::MoveCos()
 {
     FVector CurrentLocation = GetActorLocation();
-    float   Time            = GetWorld()->GetTimeSeconds();
     
-    CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Cos(GeometryData.Frequency * Time);
-    SetActorLocation(CurrentLocation);
+    if(GetWorld())
+    {
+        const float Time = GetWorld()->GetTimeSeconds();
+        CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Cos(GeometryData.Frequency * Time);
+        SetActorLocation(CurrentLocation);
+    }
 }
 
 void ABaseGeometryActor::MoveCircle()
 {
     FVector CurrentLocation = GetActorLocation();
-    float   Time            = GetWorld()->GetTimeSeconds();
     
-    CurrentLocation.Y = InitialLocation.Y + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
-    CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Cos(GeometryData.Frequency * Time);
-    SetActorLocation(CurrentLocation);
+    if(GetWorld())
+    {
+        const float Time = GetWorld()->GetTimeSeconds();
+        CurrentLocation.Y = InitialLocation.Y + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
+        CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Cos(GeometryData.Frequency * Time);
+        SetActorLocation(CurrentLocation);
+    }
 }
 
 void ABaseGeometryActor::HandleMovement()
@@ -141,6 +153,8 @@ void ABaseGeometryActor::HandleMovement()
 
 void ABaseGeometryActor::SetColor(const FLinearColor& Color) const
 {
+    if(!BaseMesh) return;
+    
     UMaterialInstanceDynamic* DynamicMaterial = BaseMesh->CreateAndSetMaterialInstanceDynamic(0);
 
     if(DynamicMaterial)
@@ -162,4 +176,9 @@ void ABaseGeometryActor::OnTimerFired()
         UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s, Time has been stopped!"), *GetName());
         GetWorldTimerManager().ClearTimer(TimerHandle);
     }
+}
+
+void ABaseGeometryActor::SetGeometryData(const FGeometryData& Data)
+{
+    GeometryData = Data;
 }
