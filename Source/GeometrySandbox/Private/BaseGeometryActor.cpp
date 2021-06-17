@@ -169,7 +169,7 @@ void ABaseGeometryActor::SetColor(const FLinearColor& Color) const
     }
 }
 
-FString ABaseGeometryActor::PrintGeometryData() const
+FString ABaseGeometryActor::GeometryDataToString() const
 { 
     FString MoveTypeString;
     switch (GeometryData.MoveType)
