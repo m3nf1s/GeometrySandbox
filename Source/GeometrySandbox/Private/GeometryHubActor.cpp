@@ -16,8 +16,8 @@ void AGeometryHubActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    DoActorSpawn1();
-    DoActorSpawn2();
+    //DoActorSpawn1();
+    //DoActorSpawn2();
     DoActorSpawn3();
 }
 
@@ -27,7 +27,7 @@ void AGeometryHubActor::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void AGeometryHubActor::DoActorSpawn1() const
+void AGeometryHubActor::DoActorSpawn1()
 {
     UWorld* World = GetWorld();
     if(World)
@@ -48,7 +48,7 @@ void AGeometryHubActor::DoActorSpawn1() const
     }
 }
 
-void AGeometryHubActor::DoActorSpawn2() const
+void AGeometryHubActor::DoActorSpawn2()
 {
     UWorld* World = GetWorld();
     if(World)
@@ -71,7 +71,7 @@ void AGeometryHubActor::DoActorSpawn2() const
     }
 }
 
-void AGeometryHubActor::DoActorSpawn3() const
+void AGeometryHubActor::DoActorSpawn3()
 {
     UWorld* World = GetWorld();
     if(World)
@@ -82,9 +82,32 @@ void AGeometryHubActor::DoActorSpawn3() const
             if(Geometry)
             {
                 Geometry->SetGeometryData(Payload.Data);
+                Geometry->OnColorChanged.AddDynamic(this, &AGeometryHubActor::OnColorChanged);
+                Geometry->OnTimeFinished.AddUObject(this, &AGeometryHubActor::OnTimerFinished);
                 Geometry->FinishSpawning(Payload.InitialTransform);
             }
         }
     }
+}
+
+UFUNCTION()
+void AGeometryHubActor::OnColorChanged(const FLinearColor& Color, const FString& Name)
+{
+    UE_LOG(LogGeometryHub, Warning, TEXT("Actor name %s Color %s"), *Name, *Color.ToString())
+}
+
+void AGeometryHubActor::OnTimerFinished(AActor* Actor)
+{
+    if (!Actor) return;
+    UE_LOG(LogGeometryHub, Error, TEXT("Timer finished: %s"), *Actor->GetName());
+
+    ABaseGeometryActor* Geometry = Cast<ABaseGeometryActor>(Actor);
+    if(!Geometry) return;
+
+    UE_LOG(LogGeometryHub, Display, TEXT("Cast is success, amlitude %f"), Geometry->GetGeometryData().Amplitude);
+    UE_LOG(LogGeometryHub, Error, TEXT("Geometry: %s"), *Geometry->PrintGeometryData());
+
+    Geometry->Destroy();
+    //Geometry->SetLifeSpan(2.0f);
 }
 

@@ -35,6 +35,12 @@ void ABaseGeometryActor::BeginPlay()
     //PrintTypes();
 }
 
+void ABaseGeometryActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    UE_LOG(LogBaseGeometry, Error, TEXT("Actor is dead %s"), *GetName());
+    Super::EndPlay(EndPlayReason);
+}
+
 // Called every frame
 void ABaseGeometryActor::Tick(float DeltaTime)
 {
@@ -163,6 +169,37 @@ void ABaseGeometryActor::SetColor(const FLinearColor& Color) const
     }
 }
 
+FString ABaseGeometryActor::PrintGeometryData() const
+{ 
+    FString MoveTypeString;
+    switch (GeometryData.MoveType)
+    {
+        case EMovementType::Static:
+        {
+            MoveTypeString = "Static";
+            break;
+        }
+        case EMovementType::Sin:
+        {
+            MoveTypeString = "Sin";
+            break;
+        }
+        case EMovementType::Cos:
+        {
+            MoveTypeString = "Cos";
+            break;
+        }
+        case EMovementType::Circle:
+        {
+            MoveTypeString = "Circle";
+            break;
+        }
+    }
+    
+    return FString::Printf(TEXT("Amplitude: %f, Frequency: %f, Move Type: %s, Color: %s, Time Rate: %f"),
+        GeometryData.Amplitude, GeometryData.Frequency, *MoveTypeString, *GeometryData.Color.ToString(), GeometryData.TimerRate);
+}
+
 void ABaseGeometryActor::OnTimerFired()
 {
     if(++TimerCount <= MaxTimerCount)
@@ -170,15 +207,22 @@ void ABaseGeometryActor::OnTimerFired()
         const FLinearColor NewColor = FLinearColor::MakeRandomColor();
         UE_LOG(LogBaseGeometry, Display, TEXT("Name: %s, Timer Count: %d, Color to set up %s"), *GetName(), TimerCount, *NewColor.ToString());
         SetColor(NewColor);
+        OnColorChanged.Broadcast(NewColor, GetName());
     }
     else
     {
         UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s, Time has been stopped!"), *GetName());
         GetWorldTimerManager().ClearTimer(TimerHandle);
+        OnTimeFinished.Broadcast(this);
     }
 }
 
 void ABaseGeometryActor::SetGeometryData(const FGeometryData& Data)
 {
     GeometryData = Data;
+}
+
+FGeometryData ABaseGeometryActor::GetGeometryData() const
+{
+    return GeometryData;
 }
