@@ -8,6 +8,9 @@
 
 #include "BaseGeometryActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnColorChange, const FLinearColor&, Color, const FString&, Name);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimeFinished, AActor*);
+
 UENUM(Blueprintable)
 enum class EMovementType : uint8
 {
@@ -22,16 +25,16 @@ struct FGeometryData
 {
     GENERATED_USTRUCT_BODY()
     
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float Amplitude = 50.0f;
 
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float Frequency = 2.0f;
 
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     EMovementType MoveType = EMovementType::Static;
 
-    UPROPERTY(EditAnywhere, Category = "Design")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Design")
     FLinearColor Color = FLinearColor::Black;
 
     UPROPERTY(EditAnywhere, Category = "Design")
@@ -47,24 +50,36 @@ public:
     // Sets default values for this actor's properties
     ABaseGeometryActor();
 
-    void SetGeometryData(const FGeometryData& Data);
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
     
-    UPROPERTY(VisibleAnywhere)
-    UStaticMeshComponent* BaseMesh;
+    void SetGeometryData(const FGeometryData& Data);
+
+    FString PrintGeometryData() const;
+    
+    UFUNCTION(BlueprintCallable)
+    FGeometryData GetGeometryData() const;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnColorChange OnColorChanged;
+    
+    FOnTimeFinished OnTimeFinished;
 
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-    // Called every frame
-    virtual void Tick(float DeltaTime) override;
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* BaseMesh;
 
 private:
-    void PrintTypes() const;
-    void PrintStringTypes() const;
-    void PrintTransform() const;
-    void SetColor(const FLinearColor& Color) const;
+    void    PrintTypes()                        const;
+    void    PrintStringTypes()                  const;
+    void    PrintTransform()                    const;
+    void    SetColor(const FLinearColor& Color) const;
+
     
     void MoveSin();
     void MoveCos();
@@ -88,7 +103,7 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Health")
     bool  IsDead    = false;
 
-    UPROPERTY(EditAnywhere, Category = "Geometry Data")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Geometry Data")
     FGeometryData GeometryData;
 
 private:

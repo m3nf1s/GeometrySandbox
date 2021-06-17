@@ -8,6 +8,8 @@
 
 #include "GeometryHubActor.generated.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogGeometryHub, All, All)
+
 USTRUCT()
 struct FGeometryPayload
 {
@@ -55,7 +57,10 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    void DoActorSpawn1() const;
-    void DoActorSpawn2() const;
-    void DoActorSpawn3() const;
+    void DoActorSpawn1();
+    void DoActorSpawn2();
+    void DoActorSpawn3();
+
+    void OnColorChanged(const FLinearColor& Color, const FString& Name);
+    void OnTimerFinished(AActor* Actor);
 };
