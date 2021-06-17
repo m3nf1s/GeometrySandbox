@@ -55,7 +55,7 @@ public:
     
     void SetGeometryData(const FGeometryData& Data);
 
-    FString PrintGeometryData() const;
+    FString GeometryDataToString() const;
     
     UFUNCTION(BlueprintCallable)
     FGeometryData GetGeometryData() const;
