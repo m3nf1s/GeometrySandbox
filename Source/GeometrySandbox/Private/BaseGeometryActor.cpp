@@ -2,6 +2,9 @@
 
 
 #include "BaseGeometryActor.h"
+#include "Engine/Engine.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogBaseGeometry, All, All)
 
 // Sets default values
 ABaseGeometryActor::ABaseGeometryActor()
@@ -16,6 +19,7 @@ void ABaseGeometryActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PrintStringTypes();
 	PrintUELOGExample();
 	PrintTypes();
 }
@@ -46,5 +50,27 @@ void ABaseGeometryActor::PrintUELOGExample()
 	UE_LOG(LogTemp, Display, TEXT("Hello, Unreal!"));
 	UE_LOG(LogTemp, Warning, TEXT("Hello, Unreal!"));
 	UE_LOG(LogTemp, Error, TEXT("Hello, Unreal!"));
+}
+
+void ABaseGeometryActor::PrintStringTypes()
+{
+	FString Name = "Joseph Rostenkovic";
+	UE_LOG(LogBaseGeometry, Display, TEXT("%s"), *Name);
+
+	int WeaponNumber = 42;
+	float Health = 34.5278f;
+	bool IsDead = false;
+
+	FString WeaponNumberStat = FString::FromInt(WeaponNumber);
+	FString HealthStat = FString::SanitizeFloat(Health);
+	FString IsDeadStat = FString(IsDead ? "true" : "false");
+	FString Stats = FString::Printf(TEXT("== ALL STATS ==\n%s\n%s\n%s"), *WeaponNumberStat, *HealthStat, *IsDeadStat);
+	UE_LOG(LogBaseGeometry, Warning, TEXT("%s"), *Stats);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::White, Name);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, Stats, true, FVector2D(1.5f, 1.5f));
+	}
 }
 

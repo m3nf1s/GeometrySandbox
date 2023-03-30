@@ -26,4 +26,5 @@ public:
 private:
 	void PrintTypes();
 	void PrintUELOGExample();
+	void PrintStringTypes();
 };
