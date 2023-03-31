@@ -3,47 +3,64 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Components/StaticMeshComponent.h"
 #include "GameFramework/Actor.h"
+
 #include "BaseGeometryActor.generated.h"
 
 UCLASS()
 class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
 public:	
-	// Sets default values for this actor's properties
-	ABaseGeometryActor();
+    // Sets default values for this actor's properties
+    ABaseGeometryActor();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
 
 private:
-	void PrintTypes();
-	void PrintUELOGExample();
-	void PrintStringTypes();
+    void PrintTypes();
+    void PrintUELOGExample();
+    void PrintStringTypes();
+    void PrintActorInformation();
+
+public:
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* BaseMesh;
 
 protected:
-	UPROPERTY(EditInstanceOnly, Category = "Stats")
-	FString Name = "Joseph Rostenkovic";
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float Amplitude = 50.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-	int32 WeaponNumber = 42;
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float Frequency = 2.0f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-	int32 KillsNumber = 4;
+    UPROPERTY(EditInstanceOnly, Category = "Stats")
+    FString Name = "Joseph Rostenkovic";
 
-	UPROPERTY(EditInstanceOnly, Category = "Health")
-	float Health = 34.5278f;
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    int32 WeaponNumber = 42;
 
-	UPROPERTY(EditAnywhere, Category = "Health")
-	bool IsDead = false;
+    UPROPERTY(EditDefaultsOnly, Category = "Stats")
+    int32 KillsNumber = 4;
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	bool HasUltimate = true;
+    UPROPERTY(EditInstanceOnly, Category = "Health")
+    float Health = 34.5278f;
+
+    UPROPERTY(EditAnywhere, Category = "Health")
+    bool IsDead = false;
+
+    UPROPERTY(VisibleAnywhere, Category = "Weapon")
+    bool HasUltimate = true;
+
+private:
+    FVector InitialLocation;
 };
