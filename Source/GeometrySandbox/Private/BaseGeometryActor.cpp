@@ -21,15 +21,20 @@ ABaseGeometryActor::ABaseGeometryActor()
     }
 }
 
+void ABaseGeometryActor::SetGeometryData(const FGeometryData& NewData)
+{
+    GeometryData = NewData;
+}
+
 // Called when the game starts or when spawned
 void ABaseGeometryActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    PrintStringTypes();
-    PrintUELOGExample();
-    PrintTypes();
-    PrintActorInformation();
+    //PrintStringTypes();
+    //PrintUELOGExample();
+    //PrintTypes();
+    //PrintActorInformation();
 
     InitialLocation = GetActorLocation();
 

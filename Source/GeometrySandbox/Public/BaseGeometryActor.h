@@ -15,7 +15,8 @@ enum class EMovementType : uint8
     Static,
     Circle,
     Vertical,
-    Horizontal
+    Horizontal,
+    Max
 };
 
 USTRUCT()
@@ -47,6 +48,8 @@ class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor
 public:
     // Sets default values for this actor's properties
     ABaseGeometryActor();
+
+    void SetGeometryData(const FGeometryData& NewData);
 
 protected:
     // Called when the game starts or when spawned
