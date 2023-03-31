@@ -51,7 +51,7 @@ void ABaseGeometryActor::Tick(float DeltaTime)
     Move();
 }
 
-void ABaseGeometryActor::PrintTypes()
+void ABaseGeometryActor::PrintTypes() const
 {
     UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s"), *GetName());
     UE_LOG(LogBaseGeometry, Warning, TEXT("Weapon number: %d, Kills number: %i"), WeaponNumber, KillsNumber);
@@ -60,21 +60,21 @@ void ABaseGeometryActor::PrintTypes()
     UE_LOG(LogBaseGeometry, Warning, TEXT("Player has ultimate %i"), static_cast<int>(HasUltimate));
 }
 
-void ABaseGeometryActor::PrintUELOGExample()
+void ABaseGeometryActor::PrintUELOGExample() const
 {
     UE_LOG(LogTemp, Display, TEXT("Hello, Unreal!"));
     UE_LOG(LogTemp, Warning, TEXT("Hello, Unreal!"));
     UE_LOG(LogTemp, Error, TEXT("Hello, Unreal!"));
 }
 
-void ABaseGeometryActor::PrintStringTypes()
+void ABaseGeometryActor::PrintStringTypes() const
 {
     UE_LOG(LogBaseGeometry, Display, TEXT("%s"), *Name);
 
-    FString WeaponNumberStat = FString::FromInt(WeaponNumber);
-    FString HealthStat = FString::SanitizeFloat(Health);
-    FString IsDeadStat = FString(IsDead ? "true" : "false");
-    FString Stats = FString::Printf(TEXT("== ALL STATS ==\n%s\n%s\n%s"), *WeaponNumberStat, *HealthStat, *IsDeadStat);
+    const FString WeaponNumberStat = FString::FromInt(WeaponNumber);
+    const FString HealthStat = FString::SanitizeFloat(Health);
+    const FString IsDeadStat = FString(IsDead ? "true" : "false");
+    const FString Stats = FString::Printf(TEXT("== ALL STATS ==\n%s\n%s\n%s"), *WeaponNumberStat, *HealthStat, *IsDeadStat);
     UE_LOG(LogBaseGeometry, Warning, TEXT("%s"), *Stats);
 
     if (GEngine)
@@ -84,12 +84,12 @@ void ABaseGeometryActor::PrintStringTypes()
     }
 }
 
-void ABaseGeometryActor::PrintActorInformation()
+void ABaseGeometryActor::PrintActorInformation() const
 {
-    FTransform Transform = GetActorTransform();
-    FVector Location = Transform.GetLocation();
-    FRotator Rotation = Transform.Rotator();
-    FVector Scale = Transform.GetScale3D();
+    const FTransform Transform = GetActorTransform();
+    const FVector Location = Transform.GetLocation();
+    const FRotator Rotation = Transform.Rotator();
+    const FVector Scale = Transform.GetScale3D();
 
     UE_LOG(LogBaseGeometry, Warning, TEXT("Actor name: %s"), *GetName());
     UE_LOG(LogBaseGeometry, Warning, TEXT("Transform: %s"), *Transform.ToString());
@@ -103,7 +103,7 @@ void ABaseGeometryActor::PrintActorInformation()
 void ABaseGeometryActor::Move()
 {
     FVector CurrentLocation = GetActorLocation();
-    UWorld* World = GetWorld();
+    const UWorld* World = GetWorld();
     if (World)
     {
         const float Time = GetWorld()->GetTimeSeconds();
@@ -127,7 +127,7 @@ void ABaseGeometryActor::Move()
     }
 }
 
-void ABaseGeometryActor::SetColor(const FLinearColor& Color)
+void ABaseGeometryActor::SetColor(const FLinearColor& Color) const
 {
     if (BaseMesh)
     {

@@ -28,7 +28,7 @@ void AGeometryHubActor::Tick(float DeltaTime)
 
 }
 
-void AGeometryHubActor::DoActorSpawn1()
+void AGeometryHubActor::DoActorSpawn1() const
 {
     if(UWorld* World = GetWorld())
     {
@@ -48,7 +48,7 @@ void AGeometryHubActor::DoActorSpawn1()
     }
 }
 
-void AGeometryHubActor::DoActorSpawn2()
+void AGeometryHubActor::DoActorSpawn2() const
 {
     if(UWorld* World = GetWorld())
     {

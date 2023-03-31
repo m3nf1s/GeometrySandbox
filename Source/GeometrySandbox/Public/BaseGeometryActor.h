@@ -60,13 +60,13 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 private:
-    void PrintTypes();
-    void PrintUELOGExample();
-    void PrintStringTypes();
-    void PrintActorInformation();
-
+    void PrintTypes() const;
+    void PrintUELOGExample() const ;
+    void PrintStringTypes() const;
+    void PrintActorInformation() const;
+    void SetColor(const FLinearColor& Color) const;
+    
     void Move();
-    void SetColor(const FLinearColor& Color);
     void OnTimerFired();
 
 public:

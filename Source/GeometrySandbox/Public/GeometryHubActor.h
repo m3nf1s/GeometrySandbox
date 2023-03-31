@@ -46,7 +46,7 @@ protected:
     TArray<FGeometryPayload> GeometryPayloads;
 
 private:
-    void DoActorSpawn1();
-    void DoActorSpawn2();
+    void DoActorSpawn1() const;
+    void DoActorSpawn2() const;
     void DoActorSpawn3();
 };
