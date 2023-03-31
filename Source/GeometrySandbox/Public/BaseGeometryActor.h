@@ -13,8 +13,9 @@ UENUM(BlueprintType)
 enum class EMovementType : uint8
 {
     Static,
-    Sin,
-    Cos
+    Circle,
+    Vertical,
+    Horizontal
 };
 
 USTRUCT()
@@ -33,6 +34,9 @@ struct FGeometryData
 
     UPROPERTY(EditAnywhere, Category = "Design")
     FLinearColor Color = FLinearColor::Black;
+
+    UPROPERTY(EditAnywhere, Category = "Design")
+    float TimerRate = 3.0f;
 };
 
 UCLASS()
@@ -60,6 +64,7 @@ private:
 
     void Move();
     void SetColor(const FLinearColor& Color);
+    void OnTimerFired();
 
 public:
     UPROPERTY(VisibleAnywhere)
@@ -89,4 +94,8 @@ protected:
 
 private:
     FVector InitialLocation;
+    FTimerHandle TimerHandle;
+
+    const int32 MaxTimerCount = 5;
+    int32 TimerCount = 0;
 };

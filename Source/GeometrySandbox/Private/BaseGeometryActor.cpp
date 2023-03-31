@@ -4,6 +4,7 @@
 #include "BaseGeometryActor.h"
 #include "Engine/Engine.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "TimerManager.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseGeometry, All, All)
 
@@ -25,14 +26,16 @@ void ABaseGeometryActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    InitialLocation = GetActorLocation();
-
-    SetColor(GeometryData.Color);
-
     PrintStringTypes();
     PrintUELOGExample();
     PrintTypes();
     PrintActorInformation();
+
+    InitialLocation = GetActorLocation();
+
+    SetColor(GeometryData.Color);
+
+    GetWorldTimerManager().SetTimer(TimerHandle, this, &ABaseGeometryActor::OnTimerFired, GeometryData.TimerRate, true);
 }
 
 // Called every frame
@@ -102,12 +105,15 @@ void ABaseGeometryActor::Move()
 
         switch (GeometryData.MoveType)
         {
-        case EMovementType::Sin:
-            CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Cos(GeometryData.Frequency * Time);
+        case EMovementType::Circle:
+            CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
+            CurrentLocation.Y = InitialLocation.Y + GeometryData.Amplitude * FMath::Cos(GeometryData.Frequency * Time);
             break;
-        case EMovementType::Cos:
+        case EMovementType::Vertical:
             CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
             break;
+        case EMovementType::Horizontal:
+            CurrentLocation.Y = InitialLocation.Y + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
         default:
             break;
         }
@@ -125,5 +131,20 @@ void ABaseGeometryActor::SetColor(const FLinearColor& Color)
         {
             DynMaterialInstance->SetVectorParameterValue("Color", Color);
         }
+    }
+}
+
+void ABaseGeometryActor::OnTimerFired()
+{
+    if (++TimerCount < MaxTimerCount)
+    {
+        const FLinearColor NewColor = FLinearColor::MakeRandomColor();
+        SetColor(NewColor);
+        UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s. Timer count: %i. Color to set up: %s"), *GetName(), TimerCount, *NewColor.ToString());
+    }
+    else
+    {
+        GetWorldTimerManager().ClearTimer(TimerHandle);
+        UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s. Timer has been stopped"), *GetName());
     }
 }
