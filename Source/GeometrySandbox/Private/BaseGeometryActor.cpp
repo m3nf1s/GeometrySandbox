@@ -8,6 +8,30 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseGeometry, All, All)
 
+FString FGeometryData::ToString() const
+{
+    FString StringMoveType;
+    switch (MoveType)
+    {
+    case EMovementType::Circle:
+        StringMoveType = "Circle";
+        break;
+    case EMovementType::Vertical:
+        StringMoveType = "Vertical";
+        break;
+    case EMovementType::Horizontal:
+        StringMoveType = "Horizontal";
+        break;
+    default:
+        StringMoveType = "Static";
+        break;
+    }
+    
+    return FString::Printf(TEXT("Amplitude: %s\nFrequency: %s\nMoveType: %s\nColor: %s\nTimeRate: %s"),
+        *FString::SanitizeFloat(Amplitude), *FString::SanitizeFloat(Frequency),
+        *StringMoveType, *Color.ToString(), *FString::SanitizeFloat(TimerRate));
+}
+
 // Sets default values
 ABaseGeometryActor::ABaseGeometryActor()
 {
@@ -26,6 +50,11 @@ void ABaseGeometryActor::SetGeometryData(const FGeometryData& NewData)
     GeometryData = NewData;
 }
 
+FGeometryData ABaseGeometryActor::GetGeometryData() const
+{
+    return GeometryData;
+}
+
 // Called when the game starts or when spawned
 void ABaseGeometryActor::BeginPlay()
 {
@@ -41,6 +70,12 @@ void ABaseGeometryActor::BeginPlay()
     SetColor(GeometryData.Color);
 
     GetWorldTimerManager().SetTimer(TimerHandle, this, &ABaseGeometryActor::OnTimerFired, GeometryData.TimerRate, true);
+}
+
+void ABaseGeometryActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    UE_LOG(LogBaseGeometry, Error, TEXT("Actor is dead: %s"), *GetName());
+    Super::EndPlay(EndPlayReason);
 }
 
 // Called every frame
@@ -146,10 +181,12 @@ void ABaseGeometryActor::OnTimerFired()
         const FLinearColor NewColor = FLinearColor::MakeRandomColor();
         SetColor(NewColor);
         UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s. Timer count: %i. Color to set up: %s"), *GetName(), TimerCount, *NewColor.ToString());
+        OnColorChanged.Broadcast(NewColor, GetName());
     }
     else
     {
         GetWorldTimerManager().ClearTimer(TimerHandle);
         UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s. Timer has been stopped"), *GetName());
+        OnTimerFinished.Broadcast(this);
     }
 }

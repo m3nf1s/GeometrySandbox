@@ -9,6 +9,9 @@
 
 #include "BaseGeometryActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnColorChanged, const FLinearColor&, Color, const FString&, Name);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimerFinished, AActor*);
+
 UENUM(BlueprintType)
 enum class EMovementType : uint8
 {
@@ -19,25 +22,27 @@ enum class EMovementType : uint8
     Max
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FGeometryData
 {
     GENERATED_USTRUCT_BODY()
 
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float Amplitude = 50.0f;
 
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float Frequency = 2.0f;
 
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     EMovementType MoveType = EMovementType::Static;
 
-    UPROPERTY(EditAnywhere, Category = "Design")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Design")
     FLinearColor Color = FLinearColor::Black;
 
-    UPROPERTY(EditAnywhere, Category = "Design")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Design")
     float TimerRate = 3.0f;
+
+    FString ToString() const;
 };
 
 UCLASS()
@@ -50,10 +55,13 @@ public:
     ABaseGeometryActor();
 
     void SetGeometryData(const FGeometryData& NewData);
-
+    
+    UFUNCTION(BlueprintCallable)
+    FGeometryData GetGeometryData() const;
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
     // Called every frame
@@ -64,6 +72,7 @@ private:
     void PrintUELOGExample() const ;
     void PrintStringTypes() const;
     void PrintActorInformation() const;
+    
     void SetColor(const FLinearColor& Color) const;
     
     void Move();
@@ -72,6 +81,10 @@ private:
 public:
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* BaseMesh;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnColorChanged OnColorChanged;
+    FOnTimerFinished OnTimerFinished;
 
 protected:
     UPROPERTY(EditAnywhere, Category = "Geometry")

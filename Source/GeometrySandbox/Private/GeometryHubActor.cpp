@@ -3,11 +3,13 @@
 
 #include "GeometryHubActor.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogGeometryHub, All, All)
+
 // Sets default values
 AGeometryHubActor::AGeometryHubActor()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    // PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -84,9 +86,28 @@ void AGeometryHubActor::DoActorSpawn3()
             if(GeometryActor)
             {
                 GeometryActor->SetGeometryData(Payload.GeometryData);
+                GeometryActor->OnColorChanged.AddDynamic(this, &AGeometryHubActor::OnColorChanged);
+                GeometryActor->OnTimerFinished.AddUObject(this, &AGeometryHubActor::OnTimerFinished);
                 GeometryActor->FinishSpawning(Payload.InitialTransform);
             }
         }
     }
+}
+
+void AGeometryHubActor::OnColorChanged(const FLinearColor& Color, const FString& Name)
+{
+    UE_LOG(LogGeometryHub, Warning, TEXT("Actor name: %s, Color: %s"), *Name, *Color.ToString());
+}
+
+void AGeometryHubActor::OnTimerFinished(AActor* Actor)
+{
+    if(!Actor) return;
+    UE_LOG(LogGeometryHub, Error, TEXT("Timer finished: %s"), *Actor->GetName());
+
+    ABaseGeometryActor* Geometry = Cast<ABaseGeometryActor>(Actor);
+    if(!Geometry) return;
+
+    UE_LOG(LogGeometryHub, Display, TEXT("Cast is success.\n%s"), *Geometry->GetGeometryData().ToString());
+    Geometry->Destroy();
 }
 

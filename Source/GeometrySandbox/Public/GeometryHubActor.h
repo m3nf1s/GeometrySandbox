@@ -21,6 +21,7 @@ struct FGeometryPayload
     UPROPERTY(EditAnywhere)
     FTransform InitialTransform;
 };
+
 UCLASS()
 class GEOMETRYSANDBOX_API AGeometryHubActor : public AActor
 {
@@ -49,4 +50,8 @@ private:
     void DoActorSpawn1() const;
     void DoActorSpawn2() const;
     void DoActorSpawn3();
+
+    UFUNCTION()
+    void OnColorChanged(const FLinearColor& Color, const FString& Name);
+    void OnTimerFinished(AActor* Actor);
 };
