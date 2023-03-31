@@ -9,12 +9,35 @@
 
 #include "BaseGeometryActor.generated.h"
 
+UENUM(BlueprintType)
+enum class EMovementType : uint8
+{
+    Static,
+    Sin,
+    Cos
+};
+
+USTRUCT()
+struct FGeometryData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float Amplitude = 50.0f;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float Frequency = 2.0f;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    EMovementType MoveType = EMovementType::Static;
+};
+
 UCLASS()
 class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor
 {
     GENERATED_BODY()
 
-public:	
+public:
     // Sets default values for this actor's properties
     ABaseGeometryActor();
 
@@ -22,7 +45,7 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
-public:	
+public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
@@ -32,16 +55,15 @@ private:
     void PrintStringTypes();
     void PrintActorInformation();
 
+    void Move();
+
 public:
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* BaseMesh;
 
 protected:
-    UPROPERTY(EditAnywhere, Category = "Movement")
-    float Amplitude = 50.0f;
-
-    UPROPERTY(EditAnywhere, Category = "Movement")
-    float Frequency = 2.0f;
+    UPROPERTY(EditAnywhere, Category = "Geometry")
+    FGeometryData GeometryData;
 
     UPROPERTY(EditInstanceOnly, Category = "Stats")
     FString Name = "Joseph Rostenkovic";
