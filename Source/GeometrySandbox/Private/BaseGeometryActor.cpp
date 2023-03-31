@@ -33,16 +33,11 @@ void ABaseGeometryActor::Tick(float DeltaTime)
 
 void ABaseGeometryActor::PrintTypes()
 {
-	int WeaponNumber = 42;
-	int KillsNumber = 4;
-	float Health = 34.5278f;
-	bool IsDead = false;
-	bool HasUltimate = true;
-
-	UE_LOG(LogTemp, Display, TEXT("Weapon number: %d, Kills number: %i"), WeaponNumber, KillsNumber);
-	UE_LOG(LogTemp, Display, TEXT("Health: %.2f"), Health);
-	UE_LOG(LogTemp, Display, TEXT("Player is dead %d"), IsDead);
-	UE_LOG(LogTemp, Display, TEXT("Player has ultimate %i"), static_cast<int>(HasUltimate));
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Name: %s"), *GetName());
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Weapon number: %d, Kills number: %i"), WeaponNumber, KillsNumber);
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Health: %f"), Health);
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Player is dead %d"), IsDead);
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Player has ultimate %i"), static_cast<int>(HasUltimate));
 }
 
 void ABaseGeometryActor::PrintUELOGExample()
@@ -54,12 +49,7 @@ void ABaseGeometryActor::PrintUELOGExample()
 
 void ABaseGeometryActor::PrintStringTypes()
 {
-	FString Name = "Joseph Rostenkovic";
 	UE_LOG(LogBaseGeometry, Display, TEXT("%s"), *Name);
-
-	int WeaponNumber = 42;
-	float Health = 34.5278f;
-	bool IsDead = false;
 
 	FString WeaponNumberStat = FString::FromInt(WeaponNumber);
 	FString HealthStat = FString::SanitizeFloat(Health);

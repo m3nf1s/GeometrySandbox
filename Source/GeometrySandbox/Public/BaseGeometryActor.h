@@ -27,4 +27,23 @@ private:
 	void PrintTypes();
 	void PrintUELOGExample();
 	void PrintStringTypes();
+
+protected:
+	UPROPERTY(EditInstanceOnly, Category = "Stats")
+	FString Name = "Joseph Rostenkovic";
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	int32 WeaponNumber = 42;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	int32 KillsNumber = 4;
+
+	UPROPERTY(EditInstanceOnly, Category = "Health")
+	float Health = 34.5278f;
+
+	UPROPERTY(EditAnywhere, Category = "Health")
+	bool IsDead = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	bool HasUltimate = true;
 };
