@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 #include "SandboxPawn.h"
 
@@ -14,6 +16,12 @@ ASandboxPawn::ASandboxPawn()
 
     SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
     SetRootComponent(SceneComponent);
+
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+    StaticMeshComponent->SetupAttachment(SceneComponent); //first method
+    
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+    CameraComponent->SetupAttachment(GetRootComponent()); // second method
 }
 
 // Called when the game starts or when spawned
@@ -32,6 +40,7 @@ void ASandboxPawn::Tick(float DeltaTime)
     {
         const FVector NewLocation = GetActorLocation() + VelocityVector * DeltaTime * Velocity;
         SetActorLocation(NewLocation);
+        VelocityVector = FVector::ZeroVector;
     }
 }
 
@@ -40,8 +49,25 @@ void ASandboxPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-    PlayerInputComponent->BindAxis("MoveForward", this, &ASandboxPawn::MoveForward);
-    PlayerInputComponent->BindAxis("MoveRight", this, &ASandboxPawn::MoveRight);
+    if(PlayerInputComponent)
+    {
+        PlayerInputComponent->BindAxis("MoveForward", this, &ASandboxPawn::MoveForward);
+        PlayerInputComponent->BindAxis("MoveRight", this, &ASandboxPawn::MoveRight);
+        PlayerInputComponent->BindAxis("MoveUp", this, &ASandboxPawn::MoveUp);
+    }
+}
+
+void ASandboxPawn::PossessedBy(AController* NewController)
+{
+    Super::PossessedBy(NewController);
+    if(!NewController) return;
+    UE_LOG(LogSandboxPawn, Error, TEXT("%s possessed %s"), *GetName(), *NewController->GetName());
+}
+
+void ASandboxPawn::UnPossessed()
+{
+    Super::UnPossessed();
+    UE_LOG(LogSandboxPawn, Warning, TEXT("%s unpossessed"), *GetName());
 }
 
 void ASandboxPawn::MoveForward(float Amount)
@@ -54,5 +80,11 @@ void ASandboxPawn::MoveRight(float Amount)
 {
     UE_LOG(LogSandboxPawn, Display, TEXT("Move right %f"), Amount);
     VelocityVector.Y = Amount;
+}
+
+void ASandboxPawn::MoveUp(const float Amount)
+{
+    UE_LOG(LogSandboxPawn, Display, TEXT("Move Up %f"), Amount);
+    VelocityVector.Z = Amount;
 }
 

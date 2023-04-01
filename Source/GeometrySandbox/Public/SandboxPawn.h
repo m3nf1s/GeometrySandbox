@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "SandboxPawn.generated.h"
 
+class UCameraComponent;
+
 UCLASS()
 class GEOMETRYSANDBOX_API ASandboxPawn : public APawn
 {
@@ -26,9 +28,18 @@ public:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    virtual void PossessedBy(AController* NewController) override;
+    virtual void UnPossessed() override;
+
 public:
     UPROPERTY(VisibleAnywhere)
     USceneComponent* SceneComponent;
+
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* StaticMeshComponent;
+
+    UPROPERTY(VisibleAnywhere)
+    UCameraComponent* CameraComponent;
 
     UPROPERTY(EditAnywhere)
     float Velocity = 300.0f;
@@ -36,7 +47,7 @@ public:
 private:
     FVector VelocityVector = FVector::ZeroVector;
  
-    void MoveForward(float Amount);
-    void MoveRight(float Amount);
-    
+    void MoveForward(const float Amount);
+    void MoveRight(const float Amount);
+    void MoveUp(const float Amount);
 };
