@@ -27,7 +27,7 @@ void ASandboxPlayerController::BeginPlay()
 void ASandboxPlayerController::ChangePawn()
 {
     if(Pawns.Num() > 1)
-        {
+    {
         ASandboxPawn* CurrentPawn = Cast<ASandboxPawn>(Pawns[CurrentPawnIndex]);
         CurrentPawnIndex = (CurrentPawnIndex + 1) % Pawns.Num();
         if(CurrentPawn)
